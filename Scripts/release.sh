@@ -125,7 +125,17 @@ fi
 
 # Check if tag already exists
 if git rev-parse "v${VERSION}" &>/dev/null; then
-    log_error "Tag v${VERSION} already exists. Choose a different version."
+    log_warning "Tag v${VERSION} already exists."
+    echo -n "Overwrite existing tag and release? [y/N]: "
+    read -r OVERWRITE
+    if [[ "$OVERWRITE" =~ ^[Yy]$ ]]; then
+        log_info "Deleting existing tag v${VERSION}..."
+        git tag -d "v${VERSION}"
+        git push origin --delete "v${VERSION}" 2>/dev/null || true
+        gh release delete "v${VERSION}" --yes 2>/dev/null || true
+    else
+        log_error "Release cancelled. Choose a different version."
+    fi
 fi
 
 # ============================================================================
