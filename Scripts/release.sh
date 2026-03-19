@@ -265,7 +265,7 @@ else
     fi
     
     # Interactive prompts for missing credentials
-    if [[ -z "$KEYCHAIN_PROFILE" && (-z "$APPLE_ID" || -z "$APP_PASSWORD") ]]; then
+    if [[ -z "$KEYCHAIN_PROFILE" && (-z "$APPLE_ID" || -z "$APP_PASSWORD" || -z "$TEAM_ID") ]]; then
         echo ""
         log_info "Notarization credentials required."
         echo ""
@@ -276,6 +276,15 @@ else
             read -r APPLE_ID
             if [[ -z "$APPLE_ID" ]]; then
                 log_error "Apple ID is required for notarization."
+            fi
+        fi
+
+        # Prompt for Team ID if not set
+        if [[ -z "$TEAM_ID" ]]; then
+            echo -n "Enter your Team ID (10-character alphanumeric): "
+            read -r TEAM_ID
+            if [[ -z "$TEAM_ID" ]]; then
+                log_error "Team ID is required for notarization."
             fi
         fi
         
@@ -356,10 +365,21 @@ git push origin "v${VERSION}"
 
 log_info "Creating GitHub release..."
 
+# Generate changelog from git log since last tag
+LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+if [[ -n "$LAST_TAG" ]]; then
+    CHANGELOG=$(git log "${LAST_TAG}..HEAD" --oneline --no-merges | sed 's/^/- /')
+else
+    CHANGELOG=$(git log --oneline --no-merges | head -n 20 | sed 's/^/- /')
+fi
+
 RELEASE_NOTES="## ${APP_NAME} v${VERSION}
 
-### Installation
+### What's Changed
+${CHANGELOG}
 
+### Installation
+...
 1. Download \`${RELEASE_ZIP}\` below
 2. Unzip and drag \`${APP_NAME}.app\` to your Applications folder
 3. Right-click and select Open (first launch only, to bypass Gatekeeper)
