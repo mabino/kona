@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Path to ship-it submodule or directory
+SHIP_IT_PATH="${SCRIPT_DIR}/ship-it/ship-it.sh"
+if [[ ! -f "$SHIP_IT_PATH" ]]; then
+    # Fallback if called from within submodule or other location
+    SHIP_IT_PATH="${SCRIPT_DIR}/ship-it.sh"
+fi
+
+if [[ ! -f "$SHIP_IT_PATH" ]]; then
+    echo "Error: ship-it.sh not found at $SHIP_IT_PATH"
+    exit 1
+fi
+
+exec bash "$SHIP_IT_PATH" "$@"
