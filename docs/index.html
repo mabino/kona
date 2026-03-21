@@ -216,7 +216,7 @@
             <p class="subtitle">Keep your Mac awake with Kona in your Dock.</p>
             <div class="cta-container">
                 <a href="https://github.com/binoio/kona/releases/latest" class="cta" id="download-btn">Download for macOS</a>
-                <span class="version-info">Requires macOS 14.0 or later</span>
+                <span class="version-info">Requires macOS 14.0 or later • <span id="version-number"></span></span>
             </div>
         </header>
 
@@ -230,7 +230,7 @@
                     if (zipAsset) {
                         const btn = document.getElementById('download-btn');
                         btn.href = zipAsset.browser_download_url;
-                        btn.innerText = `Download ${data.tag_name}`;
+                        document.getElementById('version-number').innerText = data.tag_name;
                     }
                 } catch (error) {
                     console.error('Error fetching latest release:', error);
