@@ -4,219 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kona - Keep Your Mac Awake</title>
+    <meta name="description" content="A powerful macOS menu bar utility to prevent system sleep with configurable profiles, flexible durations, and automated scheduling.">
     <style>
         :root {
-            --bg-color: #1a1a2e;
-            --card-bg: #16213e;
-            --accent: #e94560;
-            --text: #eaeaea;
-            --text-muted: #a0a0a0;
+            --bg: #0f0f1a;
+            --fg: #f5f5f7;
+            --secondary: #a0a0a5;
+            --accent: #e94560; /* Kona's signature button color */
+            --coffee: #4b3621; /* Brown from the icon */
+            --coffee-light: #6f4e37;
+            --card-bg: #1a1a2e;
+            --border: #2a2a40;
+            --radius: 12px;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #ffffff;
+                --fg: #1d1d1f;
+                --secondary: #86868b;
+                --accent: #e94560;
+                --coffee: #6f4e37;
+                --coffee-light: #8b5e3c;
+                --card-bg: #f5f5f7;
+                --border: #d2d2d7;
+            }
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--bg-color);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 980px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 0 20px;
         }
-        
+
+        nav {
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
         header {
             text-align: center;
-            padding: 4rem 0;
+            padding: 80px 0 60px;
         }
-        
-        .logo {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-        }
-        
+
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin: 0 0 20px;
+            letter-spacing: -0.015em;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--coffee-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        .tagline {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
         }
-        
-        .badges {
+
+        .cta-container {
             display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
-        
-        .badge {
-            background: var(--card-bg);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
+
+        .cta {
             display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 25px;
             font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
         }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+        .cta:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
         }
-        
-        .btn-primary {
-            background: var(--accent);
-            color: white;
+
+        .cta-secondary {
+            background: none;
+            color: var(--fg);
+            border: 1px solid var(--border);
         }
-        
-        .btn-secondary {
-            background: var(--card-bg);
-            color: var(--text);
-            border: 1px solid var(--text-muted);
+
+        .version-info {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--secondary);
         }
-        
+
         .features {
-            padding: 4rem 0;
-        }
-        
-        .features h2 {
-            text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2rem;
-        }
-        
-        .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
         }
-        
+
         .feature-card {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--coffee-light);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.4rem;
+            color: var(--coffee-light);
+        }
+
+        .feature-card p {
+            color: var(--secondary);
+            margin: 0;
+        }
+
+        .screenshots {
+            margin: 80px 0;
+        }
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .screenshot-item > a > img {
+            width: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: zoom-in;
             transition: transform 0.2s;
         }
-        
-        .feature-card:hover {
-            transform: translateY(-4px);
+        .screenshot-item > a > img:hover {
+            transform: scale(1.02);
         }
-        
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--accent);
-        }
-        
-        .feature-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-        
-        .install {
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 16px;
-            margin: 2rem 0;
-        }
-        
-        .install h2 {
-            margin-bottom: 1.5rem;
-        }
-        
-        pre {
-            background: var(--bg-color);
-            padding: 1.5rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
-        
-        code {
-            color: var(--accent);
-        }
-        
+
         footer {
             text-align: center;
-            padding: 3rem 0;
-            color: var(--text-muted);
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.9rem;
         }
-        
+
         footer a {
             color: var(--accent);
             text-decoration: none;
         }
-        
-        footer a:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            header {
-                padding: 2rem 0;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .logo {
-                font-size: 3rem;
-            }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .subtitle { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <nav>
+            <a href="#" class="logo">
+                <span class="logo-icon">☕</span>
+                Kona
+            </a>
+            <a href="https://github.com/binoio/kona" class="cta" style="background: none; color: var(--accent); padding: 0;">GitHub</a>
+        </nav>
+
         <header>
-            <div class="logo">☕</div>
             <h1>Kona</h1>
-            <p class="tagline">Keep your Mac awake.</p>
-            
-            <div class="cta-buttons">
-                <a href="https://github.com/binoio/kona/releases/latest" class="btn btn-primary" id="download-btn">
-                    Download
-                </a>
-                <a href="https://github.com/binoio/kona" class="btn btn-secondary">
-                    View on GitHub
-                </a>
+            <p class="subtitle">Keep your Mac awake with configurable "Wake States," smart scheduling, and seamless menu bar control.</p>
+            <div class="cta-container">
+                <a href="https://github.com/binoio/kona/releases/latest" class="cta" id="download-btn">Download for macOS</a>
+                <span class="version-info">Requires macOS 14.0 or later</span>
             </div>
         </header>
 
@@ -238,56 +238,43 @@
             }
             updateDownloadLink();
         </script>
-        
+
         <section class="features">
-            <h2>Features</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Wake States</h3>
-                    <p>Create named profiles with custom settings to prevent sleep exactly how you want.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⏱️</div>
-                    <h3>Flexible Durations</h3>
-                    <p>Choose from 15 min to 8 hours, or keep your Mac awake indefinitely.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🖥️</div>
-                    <h3>Screen Control</h3>
-                    <p>Independently control screen dimming and system lock behavior.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3>Scheduling</h3>
-                    <p>Set recurring schedules with specific days and time windows.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">☕</div>
-                    <h3>Menu Bar</h3>
-                    <p>Quick access from your menu bar. One click to toggle wake states.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Launch Options</h3>
-                    <p>Open at login and auto-activate your preferred wake state.</p>
-                </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>Wake States</h3>
+                <p>Create named profiles with custom settings to keep your system active exactly how you need it.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🖥️</span>
+                <h3>Screen Control</h3>
+                <p>Independently control screen dimming and system lock behavior for each profile.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📅</span>
+                <h3>Scheduling</h3>
+                <p>Set recurring schedules with specific days and time windows for automatic activation.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⏱️</span>
+                <h3>Flexible Durations</h3>
+                <p>Quickly choose from 15 minutes to 8 hours, or keep your Mac awake indefinitely.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">☕</span>
+                <h3>Menu Bar Access</h3>
+                <p>One-click toggles directly from your menu bar. See status at a glance with the coffee cup icon.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3>Native Integration</h3>
+                <p>Built with Swift and SwiftUI for macOS 14+. Supports open-at-login and auto-activation.</p>
             </div>
         </section>
-        
+
         <footer>
-            <p>
-                &copy; Michael Bino
-                &nbsp;•&nbsp;
-                <a href="https://github.com/binoio/kona">GitHub</a>
-                &nbsp;•&nbsp;
-                <a href="privacy.md">Privacy Policy</a>
-            </p>
+            <p>&copy; 2026 Michael Bino</p>
+            <p><a href="https://github.com/binoio/kona">GitHub</a> &nbsp;•&nbsp; <a href="privacy.md">Privacy Policy</a></p>
         </footer>
     </div>
 </body>
